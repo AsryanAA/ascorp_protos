@@ -1,0 +1,35 @@
+version: '3'
+
+vars:
+  PROJECT_BIN: '{{.USER_WORKING_DIR}}/bin'
+
+includes:
+  proto: ./src/proto.yml
+
+tasks:
+  generate:
+    desc: Создаем папки, подгружаем необходимые бинарники, зависимости
+    cmds:
+      - task: proto:generate
+
+  clear:
+    silent: true
+    desc: Удалить папку bin, tmp и все файлы в ней
+    cmds:
+      - rm -rf {{.PROJECT_BIN}}
+      - task: init
+
+  update:
+    desc: Обновить все зависимости
+    deps: [ vendor ]
+    cmds:
+      - go get -u ./...
+      - task: vendor
+
+  vendor:
+    desc: Загрузить зависимости
+    cmds:
+      - go mod tidy
+      - go mod vendor
+      - go mod download -x
+      - git add vendor/

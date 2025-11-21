@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package core;
+
+option go_package = "github.com/AsryanAA/ascorp_protos/pkg/core;core";
+
+service Auth {
+  rpc Login (LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1;
+  int64 access_expires = 2;
+  string refresh_token = 3;
+  int64 refresh_expires = 4;
+}
